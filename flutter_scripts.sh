@@ -22,7 +22,7 @@ function clean_assets() {
         return -1
     fi
 
-    if [[ "$(command_exists git)" -eq 0 ]]; then
+    if [[ ! "$(command_exists svgcleaner)" ]]; then
         _print_error "ERROR: Missing 'svgcleaner' utility. Install it first"
         return -1
     fi
