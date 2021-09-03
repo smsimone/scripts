@@ -12,5 +12,5 @@ function dequarantine(){
 }
 
 clear_history(){
-    echo "" > ~/.zsh_history & exec $SHELL -l
+    echo "" > ~/.zsh_history & exec "$SHELL" -l
 }
