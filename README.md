@@ -1,3 +1,5 @@
+[![DeepSource](https://deepsource.io/gh/smsimone/scripts.svg/?label=active+issues&show_trend=true&token=aOTCg2MM6Rwlaje3jF_8c8ss)](https://deepsource.io/gh/smsimone/scripts/?ref=repository-badge)
+
 # My script collection
 
 This repo contains just my (little) collection of scripts I daily use.
