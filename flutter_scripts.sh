@@ -80,7 +80,9 @@ function update_project() {
     fi
 
     fvm flutter pub upgrade --major-versions
-    for package in ($(ls "$packages_folder")); do
+    packages=($(ls "$package_folder"))
+
+    for package in $packages; do
         (cd "$packages_folder/$package" && echo "Updating package $package" && fvm flutter pub upgrade --major-versions)
     done
 }
