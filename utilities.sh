@@ -10,3 +10,7 @@ function dequarantine(){
     scriptdir=$(greadlink -f "$1")
     xattr -d com.apple.quarantine "$scriptdir"
 }
+
+clear_history(){
+    echo "" > ~/.zsh_history & exec $SHELL -l
+}

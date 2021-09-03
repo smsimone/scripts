@@ -31,7 +31,7 @@ function clean_assets() {
 
     for file in $files; do
         echo -n "Cleaning $file: "
-        svgcleaner $file $file
+        svgcleaner "$file" "$file"
     done
 }
 
@@ -54,7 +54,7 @@ function generate_asset_paths() {
 
     for folder in $folders; do
         (
-            cd $folder
+            cd "$folder"
             numOfDirs=$(find . -type d -d 1 | wc -l)
             numOfFiles=$(find . -type f -d 1 | wc -l)
             if [[ "$numOfDirs" -lt 1 || "$numOfFiles" -ge 2 ]]; then
@@ -80,7 +80,7 @@ function update_project() {
     fi
 
     fvm flutter pub upgrade --major-versions
-    for package in $(ls $packages_folder); do
+    for package in $(ls "$packages_folder"); do
         (cd "$packages_folder/$package" && echo "Updating package $package" && fvm flutter pub upgrade --major-versions)
     done
 }

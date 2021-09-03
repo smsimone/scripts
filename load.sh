@@ -7,7 +7,7 @@ function command_exists() {
         return false
     fi
 
-    if [[ ! -x "$(command -v $1)" ]]; then
+    if [[ ! -x "$(command -v "$1")" ]]; then
         echo false
         return false
     fi
@@ -23,7 +23,7 @@ if [[ "$(command_exists greadlink)" ]]; then
     to_load=($(find "$DIR" -name "*.sh"))
     for script in $to_load; do
         if [[ "$script" != *"load"* ]]; then
-            source $script
+            source "$script"
         fi
     done
 fi
