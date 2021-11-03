@@ -107,5 +107,6 @@ function upload_dsym(){
         return -1
     fi
 
-    find . -name "*.dSYM" | xargs -I \{\} ios/Pods/FirebaseCrashlytics/upload-symbols -gsp ios/Runner/GoogleService-Info.plist -p ios \{\}
+    folder=$(find . -name "dSYMs" -type d)
+    ios/Pods/FirebaseCrashlytics/upload-symbols -gsp ios/Runner/GoogleService-Info.plist -p ios "$folder"
 }
