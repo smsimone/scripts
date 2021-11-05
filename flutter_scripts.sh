@@ -54,14 +54,14 @@ function generate_asset_paths() {
 
     for folder in $folders; do
         (
-        cd "$folder"
-        numOfDirs=$(find . -type d -d 1 | wc -l)
-        numOfFiles=$(find . -type f -d 1 | wc -l)
-        if [[ "$numOfDirs" -lt 1 || "$numOfFiles" -ge 2 ]]; then
-            echo "- $folder/"
-        fi
-    )
-done
+            cd "$folder"
+            numOfDirs=$(find . -type d -d 1 | wc -l)
+            numOfFiles=$(find . -type f -d 1 | wc -l)
+            if [[ "$numOfDirs" -lt 1 || "$numOfFiles" -ge 2 ]]; then
+                echo "- $folder/"
+            fi
+        )
+    done
 }
 
 # Updates the project and the sub-projects all together
@@ -84,7 +84,7 @@ function update_project() {
 }
 
 # Launch a `flutter clean` command on the main project and (optionally on the sub projects)
-function clean_project(){
+function clean_project() {
     if [[ ! -f "pubspec.yaml" ]]; then
         _print_error "ERROR: This command has to be used inside a flutter project"
         return -1
@@ -92,20 +92,34 @@ function clean_project(){
 
     fvm flutter clean
 
-    if [[ -n "$1" ]]; then
-        packages_folder="$1"
-        packages=($(ls "$packages_folder"))
-        for package in $packages; do
-            (cd "$packages_folder/$package" && echo "Cleaning package $package" && fvm flutter clean)
-        done
-    fi
+    other_pubspecs=$(find . -name "pubspec.yaml")
+    for package in $other_pubspecs; do
+        folder=$(echo "$package" | sed -e "s/pubspec.yaml//g")
+        echo "Cleaning folder $folder"
+        (cd "$folder" && fvm flutter clean)
+    done
 }
 
-function upload_dsym(){
+function upload_dsym() {
     if [[ ! -f "pubspec.yaml" ]]; then
         _print_error "ERROR: This command has to be used inside a flutter project"
         return -1
     fi
 
     find . -name "*.dSYM" | xargs -I \{\} ios/Pods/FirebaseCrashlytics/upload-symbols -gsp ios/Runner/GoogleService-Info.plist -p ios \{\}
+}
+
+function clean_ios_folder() {
+    if [[ ! -f "pubspec.yaml" ]]; then
+        _print_error "ERROR: This command has to be used inside a flutter project"
+        return -1
+    fi
+
+    (
+        cd ios &&
+            rm Podfile.lock &&
+            pod deintegrate &&
+            pod repo update &&
+            pod install
+    )
 }
