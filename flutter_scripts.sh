@@ -54,14 +54,14 @@ function generate_asset_paths() {
 
     for folder in $folders; do
         (
-            cd "$folder"
-            numOfDirs=$(find . -type d -d 1 | wc -l)
-            numOfFiles=$(find . -type f -d 1 | wc -l)
-            if [[ "$numOfDirs" -lt 1 || "$numOfFiles" -ge 2 ]]; then
-                echo "- $folder/"
-            fi
-        )
-    done
+        cd "$folder"
+        numOfDirs=$(find . -type d -d 1 | wc -l)
+        numOfFiles=$(find . -type f -d 1 | wc -l)
+        if [[ "$numOfDirs" -lt 1 || "$numOfFiles" -ge 2 ]]; then
+            echo "- $folder/"
+        fi
+    )
+done
 }
 
 # Updates the project and the sub-projects all together
@@ -116,10 +116,10 @@ function clean_ios_folder() {
     fi
 
     (
-        cd ios &&
-            rm Podfile.lock &&
-            pod deintegrate &&
-            pod repo update &&
-            pod install
+    cd ios &&
+        (rm Podfile.lock||echo "Lock file doesn't exists") &&
+        pod deintegrate &&
+        pod repo update &&
+        pod install
     )
 }
