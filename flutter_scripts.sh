@@ -54,14 +54,14 @@ function generate_asset_paths() {
 
     for folder in $folders; do
         (
-        cd "$folder"
-        numOfDirs=$(find . -type d -d 1 | wc -l)
-        numOfFiles=$(find . -type f -d 1 | wc -l)
-        if [[ "$numOfDirs" -lt 1 || "$numOfFiles" -ge 2 ]]; then
-            echo "- $folder/"
-        fi
-    )
-done
+            cd "$folder"
+            numOfDirs=$(find . -type d -d 1 | wc -l)
+            numOfFiles=$(find . -type f -d 1 | wc -l)
+            if [[ "$numOfDirs" -lt 1 || "$numOfFiles" -ge 2 ]]; then
+                echo "- $folder/"
+            fi
+        )
+    done
 }
 
 # Launch a `flutter clean` command on the main project and (optionally on the sub projects)
@@ -96,9 +96,8 @@ function clean_ios_folder() {
         return -1
     fi
 
-    (
     cd ios &&
-        (rm Podfile.lock||echo "Lock file doesn't exists") &&
+        (rm Podfile.lock || echo "Lock file doesn't exists") &&
         pod deintegrate &&
         pod repo update &&
         pod install
