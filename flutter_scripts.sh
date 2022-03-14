@@ -64,25 +64,6 @@ function generate_asset_paths() {
     done
 }
 
-# Updates the project and the sub-projects all together
-function update_project() {
-    if [[ ! -f "pubspec.yaml" ]]; then
-        _print_error "ERROR: This command has to be used inside a flutter project"
-        return -1
-    fi
-
-    fvm flutter pub upgrade --major-versions
-
-    if [[ -n "$1" ]]; then
-        packages_folder="$1"
-
-        for package in $packages; do
-            (cd "$packages_folder/$package" && echo "Updating package $package" && fvm flutter pub upgrade --major-versions)
-        done
-    fi
-
-}
-
 # Launch a `flutter clean` command on the main project and (optionally on the sub projects)
 function clean_project() {
     if [[ ! -f "pubspec.yaml" ]]; then
@@ -117,7 +98,7 @@ function clean_ios_folder() {
 
     (
         cd ios &&
-            rm Podfile.lock &&
+            (rm Podfile.lock || echo "Podfile.lock not found") &&
             pod deintegrate &&
             pod repo update &&
             pod install
