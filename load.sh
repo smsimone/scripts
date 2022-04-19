@@ -27,5 +27,3 @@ if [[ "$(command_exists greadlink)" ]]; then
         fi
     done
 fi
-
-#export PATH="$PATH:$(pwd)"
