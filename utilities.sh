@@ -20,13 +20,25 @@ function remove_old_branches() {
 # Updates all the branches in the current git repository
 function update_all_branches() {
     curr_branch=$(git branch | grep '*' | awk -F' ' '{print $2}')
+
+    to_commit=$(git status | grep 'nothing to commit')
+
+    if [ -z $to_commit ]; then
+        git add . && git stash
+    fi
+
     for branch in $(git branch); do
         if [[ "$branch" != "$curr_branch" ]]; then
             git checkout $branch
             git pull
         fi
     done
+
     git checkout $curr_branch
+
+    if [ -z $to_commit ]; then
+        git stash pop
+    fi
 }
 
 clear_history() {
