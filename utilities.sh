@@ -17,6 +17,18 @@ function remove_old_branches() {
     git fetch -p && for branch in $(git branch -vv | grep ': gone]' | awk '{print $1}'); do git branch -D $branch; done
 }
 
+# Updates all the branches in the current git repository
+function update_all_branches() {
+    curr_branch=$(git branch | grep '*' | awk -F' ' '{print $2}')
+    for branch in $(git branch); do
+        if [[ "$branch" != "$curr_branch" ]]; then
+            git checkout $branch
+            git pull
+        fi
+    done
+    git checkout $curr_branch
+}
+
 clear_history() {
     echo "" >~/.zsh_history &
     exec "$SHELL" -l
