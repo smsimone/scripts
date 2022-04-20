@@ -35,7 +35,7 @@ function clean_assets() {
     done
 }
 
-# Generates all the paths to put in `pubspec.yaml` to import all the assets of the projects
+# Generates all the paths to put in `pubspec.yaml` to import all the assets of the projects
 function generate_asset_paths() {
     if [[ ! -f "pubspec.yaml" ]]; then
         _print_error "ERROR: This command has to be used inside a flutter project"
