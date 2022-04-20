@@ -3,20 +3,19 @@
 function command_exists() {
     if [[ -z "$1" ]]; then
         _print_error "ERROR: Missing #1 parameter"
-        echo false
-        return false
+        return 1
     fi
 
     if [[ ! -x "$(command -v "$1")" ]]; then
-        echo false
-        return false
+        return 1
     fi
 
-    echo true
-    return true
+    return 0
 }
 
-if [[ "$(command_exists greadlink)" ]]; then
+command_exists greadlink
+
+if [[ $? -eq 0 ]]; then
     ### Loads all the scripts contained in this folder
     DIR=$(greadlink -f "$0" | sed -e "s/\/load.sh//g")
 
