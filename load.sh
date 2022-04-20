@@ -27,3 +27,11 @@ if [[ "$(command_exists greadlink)" ]]; then
         fi
     done
 fi
+
+#export PATH="$PATH:$(pwd)"
+git remote update >/dev/null 2>&1
+is_behind=$(git status -uno | grep "Your branch is behind")
+if [[ -n "$is_behind" ]]; then
+    git pull >/dev/null 2>&1
+    echo "Scripts updated, please reload your shell"
+fi
