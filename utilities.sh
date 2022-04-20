@@ -4,7 +4,7 @@
 function dequarantine() {
     if [[ -z "$1" ]]; then
         _print_error "ERROR: Missing the script to de-quarantine. Usage: 'dequarantine <script>'"
-        return -1
+        return 1
     fi
 
     scriptdir=$(greadlink -f "$1")

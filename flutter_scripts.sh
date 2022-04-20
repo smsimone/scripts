@@ -11,7 +11,7 @@ function _print_error() {
 function clean_assets() {
     if [[ ! -f "pubspec.yaml" ]]; then
         _print_error "ERROR: This command has to be used inside a flutter project"
-        return -1
+        return 1
     fi
 
     asset_folder=""
@@ -19,12 +19,12 @@ function clean_assets() {
         asset_folder="$1"
     else
         _print_error "ERROR: Missing assets folder parameter. Usage: 'clean_assets <folder>'"
-        return -1
+        return 1
     fi
 
     if [[ ! "$(command_exists svgcleaner)" ]]; then
         _print_error "ERROR: Missing 'svgcleaner' utility. Install it first"
-        return -1
+        return 1
     fi
 
     files=($(find "$asset_folder" -name "*.svg"))
@@ -39,7 +39,7 @@ function clean_assets() {
 function generate_asset_paths() {
     if [[ ! -f "pubspec.yaml" ]]; then
         _print_error "ERROR: This command has to be used inside a flutter project"
-        return -1
+        return 1
     fi
 
     asset_folder=""
@@ -47,7 +47,7 @@ function generate_asset_paths() {
         asset_folder="$1"
     else
         _print_error "ERROR: Missing assets folder parameter. Usage: 'generate_asset_paths <folder>'"
-        return -1
+        return 1
     fi
 
     folders=($(find "$asset_folder" -type d))
@@ -68,7 +68,7 @@ function generate_asset_paths() {
 function clean_project() {
     if [[ ! -f "pubspec.yaml" ]]; then
         _print_error "ERROR: This command has to be used inside a flutter project"
-        return -1
+        return 1
     fi
 
     fvm flutter clean
@@ -84,7 +84,7 @@ function clean_project() {
 function upload_dsym() {
     if [[ ! -f "pubspec.yaml" ]]; then
         _print_error "ERROR: This command has to be used inside a flutter project"
-        return -1
+        return 1
     fi
 
     find . -name "*.dSYM" | xargs -I \{\} ios/Pods/FirebaseCrashlytics/upload-symbols -gsp ios/Runner/GoogleService-Info.plist -p ios \{\}
@@ -93,7 +93,7 @@ function upload_dsym() {
 function clean_ios_folder() {
     if [[ ! -f "pubspec.yaml" ]]; then
         _print_error "ERROR: This command has to be used inside a flutter project"
-        return -1
+        return 1
     fi
 
     cd ios &&
