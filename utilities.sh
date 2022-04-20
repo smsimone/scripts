@@ -14,7 +14,7 @@ function dequarantine() {
 # Deletes all the local branches of a git repository that does not exist anymore
 # on the remote
 function remove_old_branches() {
-    git fetch -p && for branch in $(git branch -vv | grep ': gone]' | awk '{print $1}'); do git branch -D $branch; done
+    git fetch -p && for branch in $(git branch -vv | grep ': gone]' | awk '{print $1}'); do git branch -D "$branch"; done
 }
 
 # Updates all the branches in the current git repository
@@ -23,20 +23,20 @@ function update_all_branches() {
 
     to_commit=$(git status | grep 'nothing to commit')
 
-    if [ -z $to_commit ]; then
+    if [ -z "$to_commit" ]; then
         git add . && git stash
     fi
 
     for branch in $(git branch); do
         if [[ "$branch" != "$curr_branch" ]]; then
-            git checkout $branch
+            git checkout "$branch"
             git pull
         fi
     done
 
-    git checkout $curr_branch
+    git checkout "$curr_branch"
 
-    if [ -z $to_commit ]; then
+    if [ -z "$to_commit" ]; then
         git stash pop
     fi
 }
