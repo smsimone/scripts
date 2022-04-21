@@ -13,25 +13,51 @@ function command_exists() {
     return 0
 }
 
-command_exists greadlink
+function reset_scripts() {
+    if [ -f 'config.json' ]; then
+        rm 'config.json'
+        echo "Scripts resetted"
+    else
+        echo "No config.json found"
+    fi
+}
 
-if [[ $? -eq 0 ]]; then
-    ### Loads all the scripts contained in this folder
-    DIR=$(greadlink -f "$0" | sed -e "s/\/load.sh//g")
+sourced=$(cat "$HOME/.zshrc" | grep "load.sh")
+
+if [[ -n "$sourced" ]]; then
+    current_path=$(echo "$sourced" | awk '{print $2}' | sed 's/\"//g' | sed 's/\/load.sh//g')
+    expanded_path="${current_path/#\$HOME/$HOME}"
+
     (
-        cd $DIR
-        git remote update >/dev/null 2>&1
-        is_behind=$(git status -uno | grep "Your branch is behind")
-        if [[ -n "$is_behind" ]]; then
-            git pull >/dev/null 2>&1
-            echo "Scripts updated, please reload your shell"
-        fi
+        cd "$expanded_path"
+        if [ -f 'config.json' ]; then
+            # The config file exists so we will load it
+            to_load=($(jq '.files' config.json | jq '.[]'))
+            for file in ${to_load[@]}; do
+                to_source=$(echo $file | sed -e 's/^"//' -e 's/"$//')
+                source "$to_source"
+            done
+        else
+            files=()
+            # The config file does not exist so we will create it
+            to_load=($(find "$expanded_path" -name "*.sh" | sed -e 's/\/\//\//g'))
+            for script in "${to_load[@]}"; do
+                if [[ "$script" != *"load"* ]]; then
+                    files+=("$script")
+                fi
+            done
 
-    )
-    to_load=($(find "$DIR" -name "*.sh"))
-    for script in $to_load; do
-        if [[ "$script" != *"load"* ]]; then
-            source "$script"
+            let end=${#files[@]}
+            echo "Loading ${#files[@]} scripts"
+            echo '{"files":[' >config.json
+            for index in $(seq 1 $end); do
+                if [[ "$index" -eq "${#files[@]}" ]]; then
+                    echo "\"${files[$index]}\"" >>config.json
+                else
+                    echo "\"${files[$index]}\"," >>config.json
+                fi
+            done
+            echo ']}' >>config.json
         fi
-    done
+    )
 fi
